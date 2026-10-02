@@ -1,0 +1,1082 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl" class="h-full w-full overflow-hidden">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+  <title>دستیار هوشمند کلینیک دکتر مسعود حسینی | نوبت‌دهی قلب و عروق</title>
+
+  <!-- Google Fonts: Vazirmatn Persian Web Typography -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Vazirmatn:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+
+  <!-- Tailwind CSS CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+
+  <!-- GSAP 3 CDN -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+
+  <!-- Canvas Confetti CDN -->
+  <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.9.2/dist/confetti.browser.min.js"></script>
+
+  <!-- FontAwesome 6 CDN for medical & UI iconography -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          fontFamily: {
+            sans: ['IRANYekanX', 'Vazirmatn', 'system-ui', '-apple-system', 'sans-serif'],
+          },
+          colors: {
+            obsidian: '#05070c',
+            surface: '#090d16',
+            card: 'rgba(15, 23, 42, 0.75)',
+            cyanGlow: '#00d2ff',
+            cyanDark: '#0284c7',
+            emeraldGlow: '#10b981',
+            roseGlow: '#f43f5e',
+          },
+          screens: {
+            'xs': '375px',
+          }
+        }
+      }
+    }
+  </script>
+
+  <style>
+    :root {
+      --app-height: 100dvh;
+      --safe-bottom: env(safe-area-inset-bottom, 0px);
+      --safe-top: env(safe-area-inset-top, 0px);
+    }
+
+    * {
+      -webkit-tap-highlight-color: transparent;
+      box-sizing: border-box;
+      outline: none;
+    }
+
+    html, body {
+      width: 100%;
+      height: 100%;
+      height: 100dvh;
+      margin: 0;
+      padding: 0;
+      overflow: hidden;
+      background-color: #05070c;
+      color: #f1f5f9;
+      font-family: 'IRANYekanX', 'Vazirmatn', system-ui, sans-serif;
+    }
+
+    /* Prevent mobile rubber-banding and layout breaks */
+    .app-viewport {
+      height: 100dvh;
+      width: 100%;
+      max-width: 100vw;
+      display: flex;
+      flex-direction: column;
+      position: relative;
+      overflow: hidden;
+      padding-top: var(--safe-top);
+      padding-bottom: var(--safe-bottom);
+    }
+
+    /* Custom high-end scrollbars */
+    ::-webkit-scrollbar {
+      width: 4px;
+      height: 4px;
+    }
+    ::-webkit-scrollbar-track {
+      background: transparent;
+    }
+    ::-webkit-scrollbar-thumb {
+      background: rgba(0, 210, 255, 0.2);
+      border-radius: 9999px;
+    }
+
+    .no-scrollbar::-webkit-scrollbar {
+      display: none;
+    }
+    .no-scrollbar {
+      -ms-overflow-style: none;
+      scrollbar-width: none;
+    }
+
+    /* Luxury Glassmorphism Utilities */
+    .glass-header {
+      background: rgba(8, 12, 22, 0.88);
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
+      border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+    }
+
+    .glass-footer {
+      background: rgba(6, 9, 17, 0.94);
+      backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
+      border-top: 1px solid rgba(255, 255, 255, 0.08);
+    }
+
+    .glass-bubble-ai {
+      background: linear-gradient(145deg, rgba(15, 23, 42, 0.9) 0%, rgba(10, 15, 28, 0.92) 100%);
+      backdrop-filter: blur(10px);
+      border: 1px solid rgba(0, 210, 255, 0.2);
+      box-shadow: 0 4px 20px -2px rgba(0, 0, 0, 0.5);
+    }
+
+    .glass-bubble-user {
+      background: linear-gradient(135deg, #0284c7 0%, #0369a1 100%);
+      border: 1px solid rgba(255, 255, 255, 0.22);
+      box-shadow: 0 4px 15px -2px rgba(2, 132, 199, 0.4);
+    }
+
+    .glass-ticket {
+      background: radial-gradient(circle at 100% 50%, transparent 12px, rgba(14, 23, 42, 0.96) 13px) top right,
+                  radial-gradient(circle at 0% 50%, transparent 12px, rgba(14, 23, 42, 0.96) 13px) top left;
+      border: 1px dashed rgba(0, 210, 255, 0.4);
+    }
+
+    /* Ambient Spotlight */
+    .spotlight {
+      pointer-events: none;
+      background: radial-gradient(450px circle at var(--x, 50%) var(--y, 50%), rgba(0, 210, 255, 0.07), transparent 60%);
+    }
+
+    /* Pulse animations */
+    @keyframes pulse-ring {
+      0% { transform: scale(0.95); opacity: 0.9; }
+      50% { transform: scale(1.18); opacity: 0.2; }
+      100% { transform: scale(0.95); opacity: 0.9; }
+    }
+    .pulse-ring {
+      animation: pulse-ring 2.2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+    }
+  </style>
+</head>
+
+<body class="w-full h-full flex items-center justify-center sm:p-3 md:p-6 bg-[#05070c]">
+  <!-- Dynamic Particle Canvas -->
+  <canvas id="bgCanvas" class="fixed inset-0 w-full h-full pointer-events-none z-0"></canvas>
+
+  <!-- Interactive Spotlight Follower -->
+  <div id="spotlightOverlay" class="fixed inset-0 spotlight z-0 hidden sm:block"></div>
+
+  <!-- Primary Application Wrapper: Fullscreen Mobile / Centered Glass Frame on Desktop -->
+  <main class="app-viewport z-10 w-full max-w-4xl h-full sm:h-[95dvh] sm:rounded-3xl sm:border border-slate-700/50 shadow-2xl bg-surface/75 backdrop-blur-2xl">
+
+    <!-- Responsive Adaptive Header -->
+    <header class="flex-none px-3.5 sm:px-6 py-2.5 sm:py-3.5 glass-header flex items-center justify-between gap-2.5 z-20">
+      <!-- Clinic & Doctor Branding -->
+      <div class="flex items-center gap-2.5 sm:gap-3.5 min-w-0">
+        <div class="relative flex-none cursor-pointer" onclick="openModal('doctorInfoModal')">
+          <div class="w-10 h-10 sm:w-12 sm:h-12 rounded-xl sm:rounded-2xl bg-gradient-to-tr from-cyan-500 to-sky-400 p-[1.5px] shadow-lg shadow-cyan-500/20 active:scale-95 transition-transform">
+            <div class="w-full h-full rounded-xl sm:rounded-2xl bg-slate-950 flex items-center justify-center">
+              <i class="fa-solid fa-user-doctor text-cyanGlow text-base sm:text-xl"></i>
+            </div>
+          </div>
+          <span class="absolute -bottom-0.5 -left-0.5 w-3.5 h-3.5 rounded-full bg-emerald-500 border-2 border-slate-900 flex items-center justify-center">
+            <span class="w-1 h-1 rounded-full bg-white animate-ping"></span>
+          </span>
+        </div>
+
+        <div class="min-w-0">
+          <div class="flex items-center gap-1.5 sm:gap-2">
+            <h1 class="font-extrabold text-sm sm:text-base text-white truncate">دکتر مسعود حسینی</h1>
+            <span class="hidden xs:inline-flex px-1.5 py-0.5 text-[9px] sm:text-[10px] font-semibold bg-cyan-500/10 text-cyanGlow border border-cyan-500/25 rounded-full whitespace-nowrap">فوق‌تخصص قلب</span>
+          </div>
+          <div class="flex items-center gap-1.5 mt-0.5 text-[11px] text-slate-400 truncate">
+            <span class="w-2 h-2 rounded-full bg-emerald-400 flex-none"></span>
+            <span class="truncate">دستیار هوشمند و نوبت‌دهی آنلاین</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- ECG Monitor Canvas & Audio Controls -->
+      <div class="flex items-center gap-1.5 sm:gap-3 flex-none">
+        <div class="hidden sm:flex flex-col items-end">
+          <div class="flex items-center gap-1.5">
+            <span class="text-[10px] text-slate-400 font-medium">پایش قلب:</span>
+            <span class="text-xs font-bold text-emerald-400 flex items-center gap-1">
+              <i class="fa-solid fa-heart-pulse text-rose-500 animate-pulse text-[11px]"></i>
+              ۷۲ BPM
+            </span>
+          </div>
+          <div class="w-28 sm:w-32 h-6 mt-0.5 rounded-lg bg-slate-950/80 border border-white/10 overflow-hidden">
+            <canvas id="ecgCanvas" width="128" height="24" class="w-full h-full"></canvas>
+          </div>
+        </div>
+
+        <!-- Mute/Sound Toggle (44px min touch target) -->
+        <button id="soundToggleBtn" onclick="toggleAudio()" class="w-10 h-10 sm:w-11 sm:h-11 rounded-xl bg-slate-800/80 hover:bg-slate-700/80 active:scale-95 border border-white/10 flex items-center justify-center text-slate-300 transition-all" title="کنترل صدا" aria-label="صدا">
+          <i id="soundIcon" class="fa-solid fa-volume-high text-sm sm:text-base"></i>
+        </button>
+
+        <!-- Clinic Info Trigger -->
+        <button onclick="openModal('clinicInfoModal')" class="w-10 h-10 sm:w-11 sm:h-11 rounded-xl bg-cyan-500/10 hover:bg-cyan-500/20 active:scale-95 border border-cyan-500/25 flex items-center justify-center text-cyanGlow transition-all" title="اطلاعات کلینیک" aria-label="اطلاعات مطب">
+          <i class="fa-solid fa-circle-info text-sm sm:text-base"></i>
+        </button>
+      </div>
+    </header>
+
+    <!-- Scrollable Chat Stream Container (Takes remaining flex height) -->
+    <div id="chatContainer" class="flex-1 overflow-y-auto overflow-x-hidden px-3 sm:px-6 py-4 space-y-3.5 relative scroll-smooth overscroll-contain">
+      
+      <!-- Welcome AI Message -->
+      <div class="chat-bubble flex items-start gap-2.5 sm:gap-3 max-w-[96%] sm:max-w-[85%]">
+        <div class="w-8 h-8 rounded-xl bg-cyan-500/20 border border-cyan-400/30 flex-none flex items-center justify-center text-cyanGlow text-xs sm:text-sm shadow-sm mt-0.5">
+          <i class="fa-solid fa-robot"></i>
+        </div>
+        <div class="glass-bubble-ai rounded-2xl rounded-tr-none p-3.5 sm:p-4 text-xs sm:text-sm text-slate-200 leading-relaxed shadow-lg">
+          <p class="font-medium text-white mb-1.5 flex items-center gap-1.5">
+            <span>درود و وقت بخیر؛ به سامانه هوشمند کلینیک خوش آمدید.</span>
+            <span>👋</span>
+          </p>
+          <p class="text-slate-300 leading-relaxed">
+            من هوش مصنوعی و دستیار بالینی <strong>دکتر مسعود حسینی</strong> هستم. می‌توانم نوبت تخصصی اکوکاردیوگرافی، ویزیت یا تست ورزش شما را فوراً رزرو کنم یا هزینه‌ها و بیمه‌های طرف قرارداد را پاسخ دهم.
+          </p>
+          <div class="mt-2.5 pt-2 border-t border-white/5 flex flex-wrap items-center gap-x-3 gap-y-1 text-[11px] text-slate-400">
+            <span class="flex items-center gap-1"><i class="fa-solid fa-bolt text-cyanGlow text-[10px]"></i>نوبت‌دهی ۲۴ ساعته</span>
+            <span class="flex items-center gap-1"><i class="fa-solid fa-shield-halved text-emeraldGlow text-[10px]"></i>تأییدیه پیامکی آنی</span>
+          </div>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- Horizontal Scrollable Quick Chips Bar -->
+    <div class="flex-none px-3 sm:px-6 py-2 bg-slate-950/60 border-t border-white/5 overflow-x-auto no-scrollbar">
+      <div id="quickChipsContainer" class="flex items-center gap-2 min-w-max py-0.5">
+        <button onclick="handleQuickAction('booking')" class="h-9 px-3.5 rounded-full text-xs font-semibold bg-cyan-500/20 text-cyanGlow border border-cyan-500/40 hover:bg-cyan-500/30 active:scale-95 transition-all flex items-center gap-1.5">
+          <i class="fa-solid fa-calendar-check text-[11px]"></i>
+          رزرو نوبت تخصصی
+        </button>
+        <button onclick="handleQuickAction('insurance')" class="h-9 px-3 rounded-full text-xs font-medium bg-slate-900/90 text-slate-200 border border-white/10 hover:border-cyan-400/40 active:scale-95 transition-all flex items-center gap-1.5">
+          <i class="fa-solid fa-shield-heart text-emerald-400 text-[11px]"></i>
+          بیمه‌های طرف قرارداد
+        </button>
+        <button onclick="handleQuickAction('services')" class="h-9 px-3 rounded-full text-xs font-medium bg-slate-900/90 text-slate-200 border border-white/10 hover:border-cyan-400/40 active:scale-95 transition-all flex items-center gap-1.5">
+          <i class="fa-solid fa-stethoscope text-sky-400 text-[11px]"></i>
+          خدمات و تعرفه‌ها
+        </button>
+        <button onclick="handleQuickAction('address')" class="h-9 px-3 rounded-full text-xs font-medium bg-slate-900/90 text-slate-200 border border-white/10 hover:border-cyan-400/40 active:scale-95 transition-all flex items-center gap-1.5">
+          <i class="fa-solid fa-location-dot text-rose-400 text-[11px]"></i>
+          نشانی و ساعت مطب
+        </button>
+        <button onclick="handleQuickAction('emergency')" class="h-9 px-3 rounded-full text-xs font-medium bg-rose-500/15 text-rose-400 border border-rose-500/30 hover:bg-rose-500/25 active:scale-95 transition-all flex items-center gap-1.5">
+          <i class="fa-solid fa-truck-medical text-[11px]"></i>
+          علائم اورژانسی قلب
+        </button>
+      </div>
+    </div>
+
+    <!-- AI Typing / Thinking Indicator -->
+    <div id="aiTypingIndicator" class="hidden flex-none px-4 sm:px-6 py-2 bg-slate-900/70 border-t border-cyan-500/15 flex items-center gap-2 text-xs text-cyanGlow">
+      <span class="flex gap-1 items-center">
+        <span class="w-1.5 h-1.5 rounded-full bg-cyan-400 animate-bounce"></span>
+        <span class="w-1.5 h-1.5 rounded-full bg-cyan-400 animate-bounce [animation-delay:0.15s]"></span>
+        <span class="w-1.5 h-1.5 rounded-full bg-cyan-400 animate-bounce [animation-delay:0.3s]"></span>
+      </span>
+      <span class="text-[11px] sm:text-xs font-medium">دستیار در حال بررسی اطلاعات بالینی...</span>
+    </div>
+
+    <!-- Sticky Footer Input Bar with 44px Touch Targets -->
+    <footer class="flex-none p-2.5 sm:p-4 glass-footer z-20">
+      <form id="chatForm" onsubmit="handleUserMessage(event)" class="relative flex items-center gap-2 max-w-full">
+        <!-- Voice Assistant Button (Accessible min 44x44px touch target) -->
+        <button type="button" id="voiceBtn" onclick="toggleVoiceRecording()" class="flex-none w-11 h-11 rounded-2xl bg-slate-800/90 hover:bg-slate-700/90 active:scale-95 border border-white/15 text-slate-300 hover:text-cyanGlow flex items-center justify-center transition-all relative group" title="مکالمه صوتی" aria-label="مکالمه صوتی">
+          <i class="fa-solid fa-microphone text-base group-hover:scale-110 transition-transform"></i>
+          <span id="voicePulse" class="hidden absolute inset-0 rounded-2xl border-2 border-cyan-400 pulse-ring"></span>
+        </button>
+
+        <!-- Dynamic Responsive Text Input -->
+        <div class="relative flex-1 min-w-0">
+          <input 
+            type="text" 
+            id="messageInput" 
+            placeholder="پیام یا درخواست نوبت خود را بنویسید..." 
+            autocomplete="off"
+            class="w-full h-11 bg-slate-900/90 text-xs sm:text-sm text-slate-100 placeholder-slate-500 rounded-2xl py-2 px-3.5 pl-10 border border-white/10 focus:border-cyan-400/60 focus:ring-2 focus:ring-cyan-500/20 transition-all"
+          >
+          <button type="button" onclick="clearInput()" class="absolute left-3 top-1/2 -translate-y-1/2 text-slate-500 hover:text-slate-300 text-sm p-1.5" aria-label="پاک کردن">
+            <i class="fa-solid fa-xmark"></i>
+          </button>
+        </div>
+
+        <!-- Submit Button (Min 44x44px) -->
+        <button type="submit" id="sendBtn" class="flex-none w-11 h-11 rounded-2xl bg-gradient-to-r from-cyan-500 to-sky-500 hover:from-cyan-400 hover:to-sky-400 text-slate-950 font-bold flex items-center justify-center shadow-lg shadow-cyan-500/25 active:scale-95 transition-all" aria-label="ارسال پیام">
+          <i class="fa-solid fa-paper-plane fa-flip-horizontal text-sm"></i>
+        </button>
+      </form>
+    </footer>
+  </main>
+
+  <!-- Modal 1: Clinic Information (Mobile Drawer / Desktop Modal) -->
+  <div id="clinicInfoModal" class="fixed inset-0 z-50 bg-black/80 backdrop-blur-md hidden items-end sm:items-center justify-center p-0 sm:p-4">
+    <div class="w-full sm:max-w-lg rounded-t-3xl sm:rounded-3xl p-5 sm:p-6 bg-slate-900 border border-white/15 text-slate-200 relative max-h-[85vh] overflow-y-auto shadow-2xl">
+      <button onclick="closeModal('clinicInfoModal')" class="absolute top-4 left-4 w-9 h-9 rounded-full bg-slate-800 text-slate-400 hover:text-white flex items-center justify-center active:scale-95" aria-label="بستن">
+        <i class="fa-solid fa-xmark text-sm"></i>
+      </button>
+
+      <div class="flex items-center gap-3 mb-4">
+        <div class="w-10 h-10 rounded-xl bg-cyan-500/20 text-cyanGlow flex items-center justify-center text-lg flex-none">
+          <i class="fa-solid fa-hospital"></i>
+        </div>
+        <div class="min-w-0">
+          <h2 class="text-sm sm:text-base font-bold text-white truncate">کلینیک فوق‌تخصصی قلب دکتر حسینی</h2>
+          <p class="text-[11px] text-slate-400">طرف قرارداد با بیمه‌های تکمیلی و پایه</p>
+        </div>
+      </div>
+
+      <div class="space-y-2.5 text-xs sm:text-sm">
+        <div class="p-3 rounded-2xl bg-slate-950/70 border border-white/5 flex items-start gap-2.5">
+          <i class="fa-solid fa-location-dot text-rose-400 text-base mt-0.5 flex-none"></i>
+          <div>
+            <span class="font-bold text-white block mb-0.5">نشانی مطب:</span>
+            <span class="text-slate-300 leading-relaxed text-[11px] sm:text-xs">تهران، خیابان ولیعصر، بالاتر از ظفر، کوی بهرام، ساختمان پزشکان پایا، طبقه ۴، واحد ۱۶</span>
+          </div>
+        </div>
+
+        <div class="p-3 rounded-2xl bg-slate-950/70 border border-white/5 flex items-start gap-2.5">
+          <i class="fa-solid fa-clock text-cyanGlow text-base mt-0.5 flex-none"></i>
+          <div>
+            <span class="font-bold text-white block mb-0.5">ساعات پذیرش:</span>
+            <span class="text-slate-300 text-[11px] sm:text-xs">شنبه تا چهارشنبه: ۱۵:۰۰ الی ۲۱:۰۰ (با تعیین وقت قبلی)</span>
+          </div>
+        </div>
+
+        <div class="p-3 rounded-2xl bg-slate-950/70 border border-white/5 flex items-start gap-2.5">
+          <i class="fa-solid fa-phone text-emeraldGlow text-base mt-0.5 flex-none"></i>
+          <div>
+            <span class="font-bold text-white block mb-0.5">تلفن مستقیم مطب:</span>
+            <a href="tel:02188765432" class="text-cyanGlow font-mono text-xs sm:text-sm inline-block dir-ltr mt-0.5">۰۲۱ - ۸۸۷۶ ۵۴۳۲</a>
+          </div>
+        </div>
+      </div>
+
+      <div class="mt-5 flex gap-2">
+        <button onclick="closeModal('clinicInfoModal')" class="flex-1 py-2.5 rounded-xl bg-cyan-500 text-slate-950 font-bold text-xs hover:bg-cyan-400 active:scale-95 transition-all">
+          متوجه شدم
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Modal 2: Doctor Profile -->
+  <div id="doctorInfoModal" class="fixed inset-0 z-50 bg-black/80 backdrop-blur-md hidden items-end sm:items-center justify-center p-0 sm:p-4">
+    <div class="w-full sm:max-w-md rounded-t-3xl sm:rounded-3xl p-5 sm:p-6 bg-slate-900 border border-white/15 text-slate-200 relative max-h-[85vh] overflow-y-auto shadow-2xl">
+      <button onclick="closeModal('doctorInfoModal')" class="absolute top-4 left-4 w-9 h-9 rounded-full bg-slate-800 text-slate-400 hover:text-white flex items-center justify-center active:scale-95" aria-label="بستن">
+        <i class="fa-solid fa-xmark text-sm"></i>
+      </button>
+
+      <div class="text-center pb-3 border-b border-white/10">
+        <div class="w-16 h-16 sm:w-20 sm:h-20 mx-auto rounded-2xl sm:rounded-3xl bg-gradient-to-tr from-cyan-500 to-sky-400 p-[2px] mb-2.5">
+          <div class="w-full h-full rounded-2xl sm:rounded-3xl bg-slate-950 flex items-center justify-center">
+            <i class="fa-solid fa-user-doctor text-cyanGlow text-2xl sm:text-3xl"></i>
+          </div>
+        </div>
+        <h3 class="text-base sm:text-lg font-bold text-white">دکتر مسعود حسینی</h3>
+        <p class="text-xs text-cyanGlow mt-0.5">فوق‌تخصص قلب و عروق و اینترونشنال کاردیولوژی</p>
+        <span class="inline-block mt-2 px-3 py-0.5 bg-slate-800 text-slate-300 text-[10px] sm:text-[11px] rounded-full">شماره نظام پزشکی: ۱۲۸۹۴۰</span>
+      </div>
+
+      <div class="py-3.5 space-y-2 text-xs text-slate-300 leading-relaxed">
+        <p>• بورد فوق‌تخصصی قلب و عروق از دانشگاه علوم پزشکی تهران.</p>
+        <p>• عضو انجمن متخصصین قلب و عروق اروپا (ESC) و ایران.</p>
+        <p>• بیش از ۱۵ سال تجربه بالینی در اکوکاردیوگرافی پیشرفته و آنژیوپلاستی.</p>
+      </div>
+
+      <button onclick="closeModal('doctorInfoModal'); handleQuickAction('booking');" class="w-full py-2.5 rounded-xl bg-cyan-500 text-slate-950 font-bold text-xs hover:bg-cyan-400 active:scale-95 transition-all flex items-center justify-center gap-2">
+        <i class="fa-solid fa-calendar-plus"></i>
+        ثبت درخواست نوبت با دکتر حسینی
+      </button>
+    </div>
+  </div>
+
+  <script>
+    // Persian digits converter
+    const toPersianDigits = (num) => {
+      const persianDigits = ['۰', '۱', '۲', '۳', '۴', '۵', '۶', '۷', '۸', '۹'];
+      return String(num).replace(/[0-9]/g, (w) => persianDigits[+w]);
+    };
+
+    // Application state
+    const state = {
+      soundEnabled: true,
+      isVoiceActive: false,
+      isAiThinking: false,
+      bookingStep: 0,
+      bookingData: {
+        service: '',
+        date: '',
+        time: '',
+        name: '',
+        phone: '',
+        nationalId: '',
+        trackingCode: ''
+      }
+    };
+
+    // Services list
+    const medicalServices = [
+      { id: 'echo', title: 'اکوکاردیوگرافی رنگی داپلر + نوار قلب (ECG)', fee: '۱,۴۵۰,۰۰۰ تومان', icon: 'fa-heart-pulse' },
+      { id: 'visit', title: 'ویزیت و معاینه تخصصی بالینی قلب', fee: '۴۵۰,۰۰۰ تومان', icon: 'fa-stethoscope' },
+      { id: 'stress', title: 'تست ورزش قلب (Stress Test)', fee: '۱,۲۰۰,۰۰۰ تومان', icon: 'fa-person-running' },
+      { id: 'holter', title: 'هولتر ۲۴ ساعته پایش ریتم یا فشارخون', fee: '۱,۶۰۰,۰۰۰ تومان', icon: 'fa-clock-rotate-left' }
+    ];
+
+    // Mock slots
+    const availableSlots = [
+      { id: 's1', day: 'شنبه ۱۲ آبان', time: '۱۶:۳۰' },
+      { id: 's2', day: 'شنبه ۱۲ آبان', time: '۱۸:۱۵' },
+      { id: 's3', day: 'دوشنبه ۱۴ آبان', time: '۱۷:۰۰' },
+      { id: 's4', day: 'دوشنبه ۱۴ آبان', time: '۱۹:۳۰' },
+      { id: 's5', day: 'چهارشنبه ۱۶ آبان', time: '۱۶:۰۰' },
+      { id: 's6', day: 'چهارشنبه ۱۶ آبان', time: '۱۸:۴۵' }
+    ];
+
+    // Web Audio Synthesizer (No external MP3 files needed)
+    let audioCtx = null;
+    function initAudio() {
+      if (!audioCtx) {
+        audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+      }
+    }
+
+    function playTone(freq = 440, type = 'sine', duration = 0.12, vol = 0.08) {
+      if (!state.soundEnabled) return;
+      try {
+        initAudio();
+        if (audioCtx.state === 'suspended') audioCtx.resume();
+        const osc = audioCtx.createOscillator();
+        const gain = audioCtx.createGain();
+        osc.type = type;
+        osc.frequency.setValueAtTime(freq, audioCtx.currentTime);
+        gain.gain.setValueAtTime(vol, audioCtx.currentTime);
+        gain.gain.exponentialRampToValueAtTime(0.0001, audioCtx.currentTime + duration);
+        osc.connect(gain);
+        gain.connect(audioCtx.destination);
+        osc.start();
+        osc.stop(audioCtx.currentTime + duration);
+      } catch (e) {
+        // Audio policy restrictions on initial touch
+      }
+    }
+
+    function playSuccessChime() {
+      if (!state.soundEnabled) return;
+      playTone(523.25, 'triangle', 0.2, 0.1);
+      setTimeout(() => playTone(659.25, 'triangle', 0.2, 0.1), 100);
+      setTimeout(() => playTone(783.99, 'triangle', 0.3, 0.12), 200);
+      setTimeout(() => playTone(1046.50, 'triangle', 0.45, 0.15), 320);
+    }
+
+    function toggleAudio() {
+      state.soundEnabled = !state.soundEnabled;
+      const icon = document.getElementById('soundIcon');
+      if (state.soundEnabled) {
+        icon.className = 'fa-solid fa-volume-high text-cyanGlow';
+        playTone(600, 'sine', 0.1, 0.08);
+      } else {
+        icon.className = 'fa-solid fa-volume-xmark text-slate-500';
+      }
+    }
+
+    // Background dynamic particles
+    const bgCanvas = document.getElementById('bgCanvas');
+    const bgCtx = bgCanvas.getContext('2d');
+    let particles = [];
+
+    function resizeBgCanvas() {
+      bgCanvas.width = window.innerWidth;
+      bgCanvas.height = window.innerHeight;
+      particles = [];
+      const count = Math.min(Math.floor(window.innerWidth / 24), 45);
+      for (let i = 0; i < count; i++) {
+        particles.push({
+          x: Math.random() * bgCanvas.width,
+          y: Math.random() * bgCanvas.height,
+          size: Math.random() * 1.8 + 0.5,
+          speedX: (Math.random() - 0.5) * 0.25,
+          speedY: (Math.random() - 0.5) * 0.25,
+          alpha: Math.random() * 0.35 + 0.08
+        });
+      }
+    }
+
+    function animateParticles() {
+      bgCtx.clearRect(0, 0, bgCanvas.width, bgCanvas.height);
+      bgCtx.fillStyle = '#00d2ff';
+
+      for (let p of particles) {
+        p.x += p.speedX;
+        p.y += p.speedY;
+        if (p.x < 0) p.x = bgCanvas.width;
+        if (p.x > bgCanvas.width) p.x = 0;
+        if (p.y < 0) p.y = bgCanvas.height;
+        if (p.y > bgCanvas.height) p.y = 0;
+
+        bgCtx.globalAlpha = p.alpha;
+        bgCtx.beginPath();
+        bgCtx.arc(p.x, p.y, p.size, 0, Math.PI * 2);
+        bgCtx.fill();
+      }
+      requestAnimationFrame(animateParticles);
+    }
+
+    // Header ECG Sine Canvas
+    const ecgCanvas = document.getElementById('ecgCanvas');
+    const ecgCtx = ecgCanvas ? ecgCanvas.getContext('2d') : null;
+    let ecgPoints = [];
+    const maxEcgPoints = 128;
+    let ecgTick = 0;
+
+    function getEcgY(t) {
+      const cycle = t % 85;
+      const mid = 12;
+      if (cycle > 15 && cycle < 20) return mid - 2.5; // P wave
+      if (cycle === 28) return mid + 3; // Q
+      if (cycle === 30) return mid - 10; // R peak
+      if (cycle === 32) return mid + 5; // S dip
+      if (cycle > 40 && cycle < 48) return mid - 3; // T wave
+      return mid + (Math.random() - 0.5) * 0.6;
+    }
+
+    function renderEcg() {
+      if (!ecgCtx) return;
+      ecgTick++;
+      ecgPoints.push(getEcgY(ecgTick));
+      if (ecgPoints.length > maxEcgPoints) ecgPoints.shift();
+
+      ecgCtx.clearRect(0, 0, ecgCanvas.width, ecgCanvas.height);
+      ecgCtx.beginPath();
+      ecgCtx.strokeStyle = '#00d2ff';
+      ecgCtx.lineWidth = 1.4;
+      ecgCtx.shadowColor = '#00d2ff';
+      ecgCtx.shadowBlur = 4;
+
+      for (let i = 0; i < ecgPoints.length; i++) {
+        if (i === 0) ecgCtx.moveTo(i, ecgPoints[i]);
+        else ecgCtx.lineTo(i, ecgPoints[i]);
+      }
+      ecgCtx.stroke();
+      requestAnimationFrame(renderEcg);
+    }
+
+    // Cursor spotlight
+    const spotlight = document.getElementById('spotlightOverlay');
+    window.addEventListener('pointermove', (e) => {
+      if (spotlight) {
+        spotlight.style.setProperty('--x', `${e.clientX}px`);
+        spotlight.style.setProperty('--y', `${e.clientY}px`);
+      }
+    });
+
+    const chatContainer = document.getElementById('chatContainer');
+    const aiTypingIndicator = document.getElementById('aiTypingIndicator');
+
+    function escapeHtml(str) {
+      const div = document.createElement('div');
+      div.textContent = str;
+      return div.innerHTML;
+    }
+
+    function appendMessage(sender, content, isHtml = false) {
+      const wrapper = document.createElement('div');
+      const isAI = sender === 'ai';
+
+      wrapper.className = `chat-bubble flex items-start gap-2.5 sm:gap-3 max-w-[96%] sm:max-w-[85%] ${
+        isAI ? 'mr-0' : 'mr-auto flex-row-reverse'
+      }`;
+
+      const avatar = isAI 
+        ? `<div class="w-8 h-8 rounded-xl bg-cyan-500/20 border border-cyan-400/30 flex-none flex items-center justify-center text-cyanGlow text-xs sm:text-sm shadow-sm mt-0.5">
+             <i class="fa-solid fa-robot"></i>
+           </div>`
+        : `<div class="w-8 h-8 rounded-xl bg-slate-800 border border-white/20 flex-none flex items-center justify-center text-slate-200 text-xs sm:text-sm mt-0.5">
+             <i class="fa-solid fa-user"></i>
+           </div>`;
+
+      const bubbleClass = isAI 
+        ? 'glass-bubble-ai rounded-2xl rounded-tr-none text-slate-200' 
+        : 'glass-bubble-user rounded-2xl rounded-tl-none text-white';
+
+      wrapper.innerHTML = `
+        ${avatar}
+        <div class="${bubbleClass} p-3.5 sm:p-4 text-xs sm:text-sm leading-relaxed shadow-md min-w-0 max-w-full overflow-hidden">
+          ${isHtml ? content : `<p class="break-words">${escapeHtml(content)}</p>`}
+        </div>
+      `;
+
+      chatContainer.appendChild(wrapper);
+      chatContainer.scrollTo({ top: chatContainer.scrollHeight, behavior: 'smooth' });
+
+      // GSAP Spring animation
+      gsap.fromTo(wrapper, 
+        { opacity: 0, y: 12, scale: 0.96 },
+        { opacity: 1, y: 0, scale: 1, duration: 0.35, ease: 'back.out(1.5)' }
+      );
+
+      playTone(isAI ? 580 : 380, 'sine', 0.07, 0.05);
+    }
+
+    function setTyping(visible) {
+      state.isAiThinking = visible;
+      aiTypingIndicator.classList.toggle('hidden', !visible);
+      if (visible) {
+        chatContainer.scrollTo({ top: chatContainer.scrollHeight, behavior: 'smooth' });
+      }
+    }
+
+    function startBookingProcess() {
+      state.bookingStep = 1;
+      let serviceButtons = medicalServices.map(s => `
+        <button onclick="selectService('${s.id}')" class="w-full text-right p-3 rounded-xl bg-slate-900/90 hover:bg-cyan-950/40 border border-white/10 hover:border-cyan-400/40 active:scale-[0.98] transition-all flex items-center justify-between group">
+          <div class="flex items-center gap-2.5 min-w-0">
+            <span class="w-8 h-8 rounded-lg bg-cyan-500/10 text-cyanGlow flex-none flex items-center justify-center text-xs group-hover:scale-110 transition-transform">
+              <i class="fa-solid ${s.icon}"></i>
+            </span>
+            <div class="min-w-0">
+              <div class="font-bold text-slate-100 text-xs sm:text-sm truncate">${s.title}</div>
+              <div class="text-[11px] text-cyanGlow/80 mt-0.5">تعرفه: ${s.fee}</div>
+            </div>
+          </div>
+          <i class="fa-solid fa-chevron-left text-xs text-slate-500 group-hover:text-cyanGlow transition-colors flex-none mr-2"></i>
+        </button>
+      `).join('');
+
+      const html = `
+        <div class="space-y-2.5">
+          <div class="flex items-center gap-2 font-bold text-white text-xs sm:text-sm border-b border-white/10 pb-2">
+            <i class="fa-solid fa-calendar-check text-cyanGlow"></i>
+            مرحله ۱ از ۳: نوع خدمت مورد نظر را انتخاب فرمایید:
+          </div>
+          <div class="space-y-2 mt-2">
+            ${serviceButtons}
+          </div>
+        </div>
+      `;
+      appendMessage('ai', html, true);
+    }
+
+    function selectService(serviceId) {
+      const selected = medicalServices.find(s => s.id === serviceId);
+      state.bookingData.service = selected.title;
+
+      appendMessage('user', `درخواست رزرو: ${selected.title}`);
+
+      setTyping(true);
+      setTimeout(() => {
+        setTyping(false);
+        showSlotPicker();
+      }, 600);
+    }
+
+    function showSlotPicker() {
+      state.bookingStep = 2;
+      let slotButtons = availableSlots.map(slot => `
+        <button onclick="selectSlot('${slot.id}', '${slot.day}', '${slot.time}')" class="slot-btn min-h-[48px] p-2 rounded-xl bg-slate-900/90 hover:bg-cyan-500 hover:text-slate-950 border border-cyan-500/30 text-center transition-all text-xs font-semibold group active:scale-95 flex flex-col items-center justify-center">
+          <div class="text-slate-300 group-hover:text-slate-950 text-[10px] sm:text-[11px]">${slot.day}</div>
+          <div class="font-mono text-cyanGlow group-hover:text-slate-950 text-xs sm:text-sm mt-0.5 font-bold">ساعت ${slot.time}</div>
+        </button>
+      `).join('');
+
+      const html = `
+        <div class="space-y-2.5">
+          <div class="flex items-center justify-between border-b border-white/10 pb-2">
+            <span class="font-bold text-white text-xs sm:text-sm flex items-center gap-2">
+              <i class="fa-solid fa-clock text-cyanGlow"></i>
+              مرحله ۲ از ۳: زمان ویزیت را تعیین کنید:
+            </span>
+          </div>
+          <div class="grid grid-cols-2 sm:grid-cols-3 gap-2 mt-2">
+            ${slotButtons}
+          </div>
+        </div>
+      `;
+      appendMessage('ai', html, true);
+
+      gsap.from('.slot-btn', {
+        scale: 0.85,
+        opacity: 0,
+        y: 8,
+        stagger: 0.04,
+        duration: 0.28,
+        ease: 'power2.out'
+      });
+    }
+
+    function selectSlot(slotId, day, time) {
+      state.bookingData.date = day;
+      state.bookingData.time = time;
+
+      appendMessage('user', `انتخاب زمان: ${day} - ساعت ${time}`);
+
+      setTyping(true);
+      setTimeout(() => {
+        setTyping(false);
+        showPatientForm();
+      }, 600);
+    }
+
+    function showPatientForm() {
+      state.bookingStep = 3;
+      const html = `
+        <div class="space-y-3">
+          <div class="flex items-center gap-2 font-bold text-white text-xs sm:text-sm border-b border-white/10 pb-2">
+            <i class="fa-solid fa-id-card text-cyanGlow"></i>
+            مرحله ۳ از ۳: مشخصات بیمار را وارد کنید:
+          </div>
+          <form onsubmit="submitBookingForm(event)" class="space-y-2.5 mt-2">
+            <div>
+              <label class="block text-[11px] text-slate-300 mb-1">نام و نام خانوادگی بیمار:</label>
+              <input type="text" id="patientNameInput" required placeholder="مثلاً: مریم احمدی" class="w-full h-10 bg-slate-950/80 border border-white/15 focus:border-cyan-400 rounded-xl px-3 text-xs text-white outline-none">
+            </div>
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-2">
+              <div>
+                <label class="block text-[11px] text-slate-300 mb-1">شماره همراه (جهت پیامک نوبت):</label>
+                <input type="tel" id="patientPhoneInput" required placeholder="۰۹۱۲۳۴۵۶۷۸۹" maxlength="11" class="w-full h-10 bg-slate-950/80 border border-white/15 focus:border-cyan-400 rounded-xl px-3 text-xs text-white outline-none font-mono" dir="ltr">
+              </div>
+              <div>
+                <label class="block text-[11px] text-slate-300 mb-1">کد ملی ده‌رقمی:</label>
+                <input type="text" id="patientIdInput" required placeholder="۰۰۱۲۳۴۵۶۷۸" maxlength="10" class="w-full h-10 bg-slate-950/80 border border-white/15 focus:border-cyan-400 rounded-xl px-3 text-xs text-white outline-none font-mono" dir="ltr">
+              </div>
+            </div>
+            <button type="submit" class="w-full min-h-[44px] mt-2 py-2.5 rounded-xl bg-gradient-to-r from-emerald-500 to-teal-500 hover:from-emerald-400 text-slate-950 font-extrabold text-xs flex items-center justify-center gap-2 shadow-lg shadow-emerald-500/20 active:scale-95 transition-all">
+              <i class="fa-solid fa-circle-check"></i>
+              تأیید نهایی و صدور بلیت الکترونیک
+            </button>
+          </form>
+        </div>
+      `;
+      appendMessage('ai', html, true);
+    }
+
+    function submitBookingForm(e) {
+      e.preventDefault();
+      const name = document.getElementById('patientNameInput').value.trim();
+      const phone = document.getElementById('patientPhoneInput').value.trim();
+      const nid = document.getElementById('patientIdInput').value.trim();
+
+      if (!name || phone.length < 10) {
+        showToast('لطفاً اطلاعات را به صورت معتبر وارد فرمایید');
+        return;
+      }
+
+      state.bookingData.name = name;
+      state.bookingData.phone = phone;
+      state.bookingData.nationalId = nid;
+      state.bookingData.trackingCode = 'CRD-' + Math.floor(100000 + Math.random() * 900000);
+
+      appendMessage('user', `ثبت اطلاعات بیمار: ${name} (${toPersianDigits(phone)})`);
+
+      setTyping(true);
+      setTimeout(() => {
+        setTyping(false);
+        showConfirmedTicket();
+      }, 900);
+    }
+
+    function showConfirmedTicket() {
+      playSuccessChime();
+      triggerConfetti();
+
+      const phonePersian = toPersianDigits(state.bookingData.phone);
+
+      const html = `
+        <div class="space-y-3.5">
+          <div class="flex items-center gap-2 text-emerald-400 font-bold text-xs sm:text-sm">
+            <i class="fa-solid fa-circle-check text-base"></i>
+            نوبت با موفقیت در سامانه درمانگاه ثبت و پیامک شد.
+          </div>
+
+          <!-- Perforated Digital Ticket -->
+          <div class="glass-ticket p-3.5 sm:p-4 rounded-2xl relative overflow-hidden text-slate-100 shadow-2xl">
+            <div class="flex items-center justify-between border-b border-dashed border-cyan-500/30 pb-2.5 mb-2.5">
+              <div>
+                <span class="text-[9px] text-cyanGlow uppercase font-bold tracking-wider">کارت دیجیتال ورود به مطب</span>
+                <h4 class="font-bold text-white text-xs sm:text-sm">دکتر مسعود حسینی</h4>
+              </div>
+              <div class="text-left font-mono">
+                <span class="text-[9px] text-slate-400 block">کد رهگیری:</span>
+                <span class="text-xs font-bold text-cyanGlow">${state.bookingData.trackingCode}</span>
+              </div>
+            </div>
+
+            <div class="grid grid-cols-2 gap-2 text-[11px] sm:text-xs py-1">
+              <div>
+                <span class="text-slate-400 block text-[10px]">بیمار محترم:</span>
+                <span class="font-semibold text-white truncate block">${escapeHtml(state.bookingData.name)}</span>
+              </div>
+              <div>
+                <span class="text-slate-400 block text-[10px]">نوع خدمت:</span>
+                <span class="font-semibold text-cyanGlow truncate block">${state.bookingData.service}</span>
+              </div>
+              <div class="mt-1">
+                <span class="text-slate-400 block text-[10px]">روز و تاریخ:</span>
+                <span class="font-semibold text-white">${state.bookingData.date}</span>
+              </div>
+              <div class="mt-1">
+                <span class="text-slate-400 block text-[10px]">ساعت دقیق حضور:</span>
+                <span class="font-bold text-emeraldGlow">${state.bookingData.time}</span>
+              </div>
+            </div>
+
+            <div class="mt-3 pt-2.5 border-t border-dashed border-cyan-500/30 flex items-center justify-between">
+              <div class="space-y-0.5">
+                <div class="font-mono text-[9px] text-emerald-400">STATUS: VERIFIED_RESERVED</div>
+                <div class="text-[10px] text-slate-300">پیامک نوبت به ${phonePersian} ارسال شد.</div>
+              </div>
+              <div class="p-1 rounded-lg bg-white/10 border border-white/20">
+                <i class="fa-solid fa-qrcode text-xl sm:text-2xl text-cyanGlow"></i>
+              </div>
+            </div>
+          </div>
+
+          <div class="flex items-center gap-2 pt-1">
+            <button onclick="window.print()" class="flex-1 min-h-[44px] py-2 rounded-xl bg-slate-800 hover:bg-slate-700 text-xs font-semibold text-slate-200 flex items-center justify-center gap-1.5 active:scale-95 transition-all">
+              <i class="fa-solid fa-print"></i>
+              چاپ یا ذخیره بلیت
+            </button>
+            <button onclick="handleQuickAction('address')" class="flex-1 min-h-[44px] py-2 rounded-xl bg-cyan-500/20 hover:bg-cyan-500/30 border border-cyan-500/40 text-xs font-semibold text-cyanGlow flex items-center justify-center gap-1.5 active:scale-95 transition-all">
+              <i class="fa-solid fa-map-location-dot"></i>
+              مسیریابی مطب
+            </button>
+          </div>
+        </div>
+      `;
+
+      appendMessage('ai', html, true);
+      state.bookingStep = 0;
+    }
+
+    function triggerConfetti() {
+      if (typeof confetti !== 'undefined') {
+        confetti({
+          particleCount: 60,
+          spread: 60,
+          origin: { y: 0.7 },
+          colors: ['#00d2ff', '#10b981', '#ffffff']
+        });
+      }
+    }
+
+    function handleQuickAction(action) {
+      playTone(480, 'sine', 0.08, 0.05);
+
+      if (action === 'booking') {
+        appendMessage('user', 'درخواست نوبت‌دهی آنلاین');
+        setTyping(true);
+        setTimeout(() => {
+          setTyping(false);
+          startBookingProcess();
+        }, 400);
+      } else if (action === 'insurance') {
+        appendMessage('user', 'بیمه‌های طرف قرارداد کلینیک کدامند؟');
+        setTyping(true);
+        setTimeout(() => {
+          setTyping(false);
+          const html = `
+            <div class="space-y-2.5">
+              <div class="font-bold text-white flex items-center gap-2 text-xs sm:text-sm">
+                <i class="fa-solid fa-shield-heart text-emeraldGlow"></i>
+                بیمه‌های تحت پوشش کلینیک:
+              </div>
+              <p class="text-xs text-slate-300">کلینیک با اکثر سازمان‌های بیمه‌گر پایه و تکمیلی قرارداد آنلاین دارد:</p>
+              <div class="grid grid-cols-2 gap-1.5 text-xs">
+                <div class="p-2 rounded-lg bg-slate-900/80 border border-white/5">• بیمه تأمین اجتماعی</div>
+                <div class="p-2 rounded-lg bg-slate-900/80 border border-white/5">• بیمه سلامت / خدمات</div>
+                <div class="p-2 rounded-lg bg-slate-900/80 border border-white/5">• بیمه ایران (آنلاین)</div>
+                <div class="p-2 rounded-lg bg-slate-900/80 border border-white/5">• نیروهای مسلح</div>
+                <div class="p-2 rounded-lg bg-slate-900/80 border border-white/5">• بیمه دانا و البرز</div>
+                <div class="p-2 rounded-lg bg-slate-900/80 border border-white/5">• آسیا، سینا و معلم</div>
+              </div>
+              <button onclick="handleQuickAction('booking')" class="mt-1 text-xs text-cyanGlow font-bold hover:underline flex items-center gap-1">
+                <span>رزرو نوبت با بیمه</span>
+                <i class="fa-solid fa-arrow-left text-[10px]"></i>
+              </button>
+            </div>
+          `;
+          appendMessage('ai', html, true);
+        }, 500);
+      } else if (action === 'services') {
+        appendMessage('user', 'خدمات و تعرفه‌های کلینیک');
+        setTyping(true);
+        setTimeout(() => {
+          setTyping(false);
+          const html = `
+            <div class="space-y-2 text-xs">
+              <div class="font-bold text-white flex items-center gap-2 text-xs sm:text-sm">
+                <i class="fa-solid fa-heart text-rose-500"></i>
+                خدمات تخصصی تشخیصی و درمانی قلب:
+              </div>
+              <ul class="space-y-1.5 text-slate-300">
+                <li><strong class="text-cyanGlow">• اکوکاردیوگرافی رنگی داپلر:</strong> بررسی وضعیت دریچه‌ها و کسر جهشی بطن (EF).</li>
+                <li><strong class="text-cyanGlow">• تست ورزش (Treadmill):</strong> بررسی خونرسانی عروق کرونر تحت بار فیزیکی.</li>
+                <li><strong class="text-cyanGlow">• هولتر ۲۴ تا ۴۸ ساعته ریتم و فشار:</strong> پایش دقیق بی‌نظمی‌های قلبی (آریتمی).</li>
+                <li><strong class="text-cyanGlow">• نوار قلب دیجیتال (ECG):</strong> تفسیر و تحلیل فوری الکتروکاردیوگرام.</li>
+              </ul>
+            </div>
+          `;
+          appendMessage('ai', html, true);
+        }, 500);
+      } else if (action === 'address') {
+        openModal('clinicInfoModal');
+      } else if (action === 'emergency') {
+        appendMessage('user', 'علائم اورژانسی قلب چیست؟');
+        setTyping(true);
+        setTimeout(() => {
+          setTyping(false);
+          const html = `
+            <div class="space-y-2 border-r-2 border-rose-500 pr-3">
+              <div class="font-bold text-rose-400 flex items-center gap-2 text-xs sm:text-sm">
+                <i class="fa-solid fa-triangle-exclamation"></i>
+                هشدار پزشکی حیاتی:
+              </div>
+              <p class="text-xs text-slate-200 leading-relaxed">
+                در صورت تجربه درد سنگین و فشارنده قفسه سینه همراه با تعریق سرد، تنگی نفس یا درد فک و بازوی چپ، <strong>بلافاصله با اورژانس (۱۱۵) تماس بگیرید</strong> و از هرگونه رانندگی خودداری کنید.
+              </p>
+              <div class="pt-1">
+                <a href="tel:115" class="inline-flex items-center gap-2 px-3 py-1.5 rounded-lg bg-rose-600 hover:bg-rose-500 text-white font-bold text-xs">
+                  <i class="fa-solid fa-phone"></i>
+                  تماس آنی با اورژانس ۱۱۵
+                </a>
+              </div>
+            </div>
+          `;
+          appendMessage('ai', html, true);
+        }, 400);
+      }
+    }
+
+    function handleUserMessage(e) {
+      if (e) e.preventDefault();
+      const input = document.getElementById('messageInput');
+      const text = input.value.trim();
+      if (!text || state.isAiThinking) return;
+
+      appendMessage('user', text);
+      input.value = '';
+
+      setTyping(true);
+      setTimeout(() => {
+        setTyping(false);
+        generateAiResponse(text);
+      }, 650);
+    }
+
+    function generateAiResponse(userText) {
+      const q = userText.toLowerCase();
+
+      if (q.includes('نوبت') || q.includes('رزرو') || q.includes('وقت') || q.includes('گرفتن')) {
+        startBookingProcess();
+      } else if (q.includes('بیمه') || q.includes('تامین اجتماعی') || q.includes('سلامت')) {
+        handleQuickAction('insurance');
+      } else if (q.includes('آدرس') || q.includes('کجاست') || q.includes('ادرس') || q.includes('ساعت')) {
+        appendMessage('ai', `نشانی کلینیک: تهران، خیابان ولیعصر، بالاتر از ظفر، کوی بهرام، ساختمان پزشکان پایا، طبقه ۴.<br>ساعات حضور دکتر: شنبه تا چهارشنبه ۱۵ الی ۲۱ با تعیین وقت قبلی.<br>تلفن: ۰۲۱-۸۸۷۶۵۴۳۲`, true);
+      } else if (q.includes('اکو') || q.includes('هزینه') || q.includes('قیمت')) {
+        appendMessage('ai', `تعرفه ویزیت تخصصی ۴۵۰,۰۰۰ تومان و اکوکاردیوگرافی داپلر با نوار قلب ۱,۴۵۰,۰۰۰ تومان می‌باشد. فاکتور رسمی جهت بیمه تکمیلی نیز صادر می‌گردد.`);
+      } else if (q.includes('سلام') || q.includes('درود')) {
+        appendMessage('ai', `سلام و درود بر شما، سلامت و تندرست باشید. در زمینه نوبت‌دهی، تعرفه‌ها یا آدرس کلینیک در خدمت شما هستم.`);
+      } else {
+        appendMessage('ai', `پیام شما با موفقیت پردازش شد. برای تسریع کار می‌توانید از گزینه‌های سریع بالا استفاده نمایید یا درخواست نوبت خود را بفرمایید.`);
+      }
+    }
+
+    function toggleVoiceRecording() {
+      state.isVoiceActive = !state.isVoiceActive;
+      const pulse = document.getElementById('voicePulse');
+      const voiceBtn = document.getElementById('voiceBtn');
+
+      if (state.isVoiceActive) {
+        pulse.classList.remove('hidden');
+        voiceBtn.classList.add('bg-cyan-500/20', 'text-cyanGlow', 'border-cyan-400');
+        playTone(650, 'sine', 0.15, 0.1);
+        showToast('در حال شنیدن صدای شما... لطفا بفرمایید');
+
+        setTimeout(() => {
+          if (state.isVoiceActive) {
+            toggleVoiceRecording();
+            const simulatedQueries = [
+              'نوبت اکوکاردیوگرافی می‌خواهم',
+              'ساعات کاری مطب دکتر حسینی',
+              'بیمه‌های طرف قرارداد کلینیک'
+            ];
+            const randomQuery = simulatedQueries[Math.floor(Math.random() * simulatedQueries.length)];
+            document.getElementById('messageInput').value = randomQuery;
+            handleUserMessage();
+          }
+        }, 2400);
+      } else {
+        pulse.classList.add('hidden');
+        voiceBtn.classList.remove('bg-cyan-500/20', 'text-cyanGlow', 'border-cyan-400');
+        playTone(380, 'sine', 0.1, 0.08);
+      }
+    }
+
+    function clearInput() {
+      document.getElementById('messageInput').value = '';
+    }
+
+    function openModal(id) {
+      const modal = document.getElementById(id);
+      modal.classList.remove('hidden');
+      modal.classList.add('flex');
+      gsap.fromTo(modal.firstElementChild, 
+        { scale: 0.92, opacity: 0, y: 20 },
+        { scale: 1, opacity: 1, y: 0, duration: 0.28, ease: 'power2.out' }
+      );
+      playTone(550, 'sine', 0.08, 0.05);
+    }
+
+    function closeModal(id) {
+      const modal = document.getElementById(id);
+      gsap.to(modal.firstElementChild, {
+        scale: 0.92,
+        opacity: 0,
+        y: 20,
+        duration: 0.2,
+        onComplete: () => {
+          modal.classList.add('hidden');
+          modal.classList.remove('flex');
+        }
+      });
+    }
+
+    function showToast(msg) {
+      const existing = document.getElementById('toastMsg');
+      if (existing) existing.remove();
+
+      const toast = document.createElement('div');
+      toast.id = 'toastMsg';
+      toast.className = 'fixed bottom-20 left-1/2 -translate-x-1/2 z-50 px-4 py-2 rounded-xl bg-slate-900/95 border border-cyan-500/40 text-cyanGlow text-xs shadow-xl backdrop-blur-md flex items-center gap-2 max-w-[90vw] text-center';
+      toast.innerHTML = `<i class="fa-solid fa-microphone-lines animate-pulse flex-none"></i><span>${msg}</span>`;
+      document.body.appendChild(toast);
+
+      gsap.fromTo(toast, { y: 15, opacity: 0 }, { y: 0, opacity: 1, duration: 0.25 });
+      setTimeout(() => {
+        gsap.to(toast, { y: 15, opacity: 0, duration: 0.25, onComplete: () => toast.remove() });
+      }, 2200);
+    }
+
+    // Dynamic viewport height adjustments for iOS Safari
+    function setViewportHeight() {
+      document.documentElement.style.setProperty('--app-height', `${window.innerHeight}px`);
+    }
+
+    window.addEventListener('DOMContentLoaded', () => {
+      setViewportHeight();
+      resizeBgCanvas();
+      animateParticles();
+      renderEcg();
+    });
+
+    window.addEventListener('resize', () => {
+      setViewportHeight();
+      resizeBgCanvas();
+    });
+  </script>
+</body>
+</html>
